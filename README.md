@@ -46,6 +46,8 @@ header('Location: '.$checkout['checkoutUrl']);
 
 Request parameters are passed as `camelCase` arrays; results come back as `camelCase` arrays.
 
+> Using Laravel? Don't construct the client by hand — **inject** the configured `PaylinkClient` from the container instead. See [Using it inside Laravel](#using-it-inside-laravel).
+
 ## Payment operations
 
 ```php
@@ -270,20 +272,46 @@ PAYLINK_HASH_TOKEN=secret_...
 PAYLINK_LOG_CHANNEL=paylink
 ```
 
-Then inject the configured client, or use the facade:
+Then inject the configured client — **constructor injection** is the idiomatic way, and the container resolves the singleton from your config:
 
 ```php
 use GetPayin\Paylink\Core\PaylinkClient;
+use Illuminate\Http\RedirectResponse;
 
-public function checkout(PaylinkClient $paylink)   // resolved from config
+final class CheckoutController
 {
-    return $paylink->invoices->create([...]);
-}
+    public function __construct(
+        private readonly PaylinkClient $paylink,
+    ) {}
 
-// or, via the facade:
+    public function store(): RedirectResponse
+    {
+        $checkout = $this->paylink->invoices->create([
+            'firstName'   => 'John',
+            'lastName'    => 'Doe',
+            'email'       => 'john@example.com',
+            'orderTitle'  => 'Gold Plan',
+            'orderAmount' => '250.00',
+            'currency'    => 'USD',
+        ]);
+
+        return redirect()->away($checkout['checkoutUrl']);
+    }
+}
+```
+
+Method injection (route actions, jobs, listeners) and the facade resolve the same singleton:
+
+```php
+use GetPayin\Paylink\Core\PaylinkClient;
 use GetPayin\Paylink\Laravel\Facades\Paylink;
 
-Paylink::invoices()->create([...]);
+public function checkout(PaylinkClient $paylink)
+{
+    return $paylink->invoices->create([/* ... */]);
+}
+
+Paylink::invoices()->create([/* ... */]);
 $event = Paylink::webhooks()->verify(request()->getContent());
 ```
 
