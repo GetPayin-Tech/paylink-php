@@ -1,0 +1,81 @@
+{
+    "name": "getpayin-tech/paylink-php",
+    "description": "Official server-side PHP SDK for the PayLink payment integration API (checkouts, payment operations, card tokens, recurring mandates, webhook verification).",
+    "keywords": [
+        "paylink",
+        "getpayin",
+        "payments",
+        "payment-gateway",
+        "checkout",
+        "webhooks",
+        "cybersource"
+    ],
+    "homepage": "https://github.com/GetPayin-Tech/paylink-php",
+    "license": "MIT",
+    "type": "library",
+    "authors": [
+        {
+            "name": "GetPayin",
+            "email": "tech@getpayin.com",
+            "homepage": "https://getpayin.com"
+        }
+    ],
+    "support": {
+        "issues": "https://github.com/GetPayin-Tech/paylink-php/issues",
+        "source": "https://github.com/GetPayin-Tech/paylink-php"
+    },
+    "require": {
+        "php": "^8.1",
+        "ext-curl": "*",
+        "ext-json": "*",
+        "psr/log": "^1.1 || ^2.0 || ^3.0"
+    },
+    "require-dev": {
+        "laravel/pint": "^1.18",
+        "pestphp/pest": "^2.36",
+        "phpstan/phpstan": "^2.2"
+    },
+    "suggest": {
+        "illuminate/support": "Enables the Laravel integration — the auto-discovered service provider, the Paylink facade, and the LaravelHttpTransport (present in any Laravel app)."
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "GetPayin\\Paylink\\Laravel\\Providers\\PaylinkServiceProvider"
+            ],
+            "aliases": {
+                "Paylink": "GetPayin\\Paylink\\Laravel\\Facades\\Paylink"
+            }
+        }
+    },
+    "autoload": {
+        "psr-4": {
+            "GetPayin\\Paylink\\Laravel\\": "src/Laravel/",
+            "GetPayin\\Paylink\\Core\\": "src/Core/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "GetPayin\\Paylink\\Tests\\": "tests/"
+        }
+    },
+    "scripts": {
+        "test": "pest",
+        "stan": "phpstan analyse",
+        "lint": "pint --test",
+        "format": "pint",
+        "check": [
+            "@lint",
+            "@stan",
+            "@test"
+        ]
+    },
+    "config": {
+        "allow-plugins": {
+            "pestphp/pest-plugin": true
+        },
+        "sort-packages": true
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true
+}

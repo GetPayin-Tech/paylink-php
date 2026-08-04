@@ -1,0 +1,13 @@
+# Keep the published package lean: exclude dev-only paths from the dist archive.
+/tests              export-ignore
+/.github            export-ignore
+/.gitattributes     export-ignore
+/.gitignore         export-ignore
+/.editorconfig      export-ignore
+/phpunit.xml.dist   export-ignore
+/phpstan.neon.dist  export-ignore
+/pint.json          export-ignore
+/CONTRIBUTING.md    export-ignore
+
+# Normalize line endings for PHP sources.
+*.php text eol=lf

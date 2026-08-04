@@ -1,0 +1,9 @@
+parameters:
+    level: 7
+    paths:
+        - src/Core
+    excludePaths:
+        # The optional Laravel adapters (provider, facade, HTTP transport) lean on
+        # Illuminate's facade magic, which needs larastan to resolve. They are not
+        # part of the framework-agnostic core and are exercised in a real Laravel app.
+        - src/Laravel
