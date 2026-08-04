@@ -1,4 +1,4 @@
-# getpayin-tech/paylink-php
+# @getpayin-tech/paylink-php
 
 [![CI](https://github.com/GetPayin-Tech/paylink-php/actions/workflows/ci.yml/badge.svg)](https://github.com/GetPayin-Tech/paylink-php/actions/workflows/ci.yml)
 [![Packagist](https://img.shields.io/packagist/v/getpayin-tech/paylink-php.svg)](https://packagist.org/packages/getpayin-tech/paylink-php)
