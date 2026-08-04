@@ -11,7 +11,7 @@ The SDK signs every request exactly the way the PayLink servers expect, so you n
 
 ## Requirements
 
-- PHP 8.1+
+- PHP 8.2+
 - `ext-curl`, `ext-json`
 
 ## Installation
