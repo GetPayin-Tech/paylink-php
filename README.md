@@ -1,8 +1,8 @@
-# @getpayin-tech/paylink-php
+# @getpayin/paylink
 
 [![CI](https://github.com/GetPayin-Tech/paylink-php/actions/workflows/ci.yml/badge.svg)](https://github.com/GetPayin-Tech/paylink-php/actions/workflows/ci.yml)
-[![Packagist](https://img.shields.io/packagist/v/getpayin-tech/paylink-php.svg)](https://packagist.org/packages/getpayin-tech/paylink-php)
-[![PHP](https://img.shields.io/packagist/php-v/getpayin-tech/paylink-php.svg)](composer.json)
+[![Packagist](https://img.shields.io/packagist/v/getpayin/paylink.svg)](https://packagist.org/packages/getpayin/paylink)
+[![PHP](https://img.shields.io/packagist/php-v/getpayin/paylink.svg)](composer.json)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
 Official server-side PHP SDK for the PayLink payment integration API — hosted checkouts, payment operations, card tokens, recurring mandates, and webhook verification.
@@ -17,7 +17,7 @@ The SDK signs every request exactly the way the PayLink servers expect, so you n
 ## Installation
 
 ```bash
-composer require getpayin-tech/paylink-php
+composer require getpayin/paylink
 ```
 
 ## Quick start

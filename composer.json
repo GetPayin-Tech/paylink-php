@@ -1,5 +1,5 @@
 {
-    "name": "getpayin-tech/paylink-php",
+    "name": "getpayin/paylink",
     "description": "Official server-side PHP SDK for the PayLink payment integration API (checkouts, payment operations, card tokens, recurring mandates, webhook verification).",
     "keywords": [
         "paylink",
