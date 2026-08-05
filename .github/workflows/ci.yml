@@ -5,6 +5,7 @@ on:
     branches: [main]
   pull_request:
   workflow_dispatch:
+  workflow_call:
 
 permissions:
   contents: read
@@ -26,6 +27,9 @@ jobs:
           php-version: '8.3'
           extensions: curl, json
           coverage: none
+
+      - name: Validate composer.json
+        run: composer validate --strict
 
       - name: Install dependencies
         run: composer install --no-interaction --no-progress --prefer-dist
