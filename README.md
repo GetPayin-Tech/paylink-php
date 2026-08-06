@@ -44,6 +44,20 @@ $checkout = $paylink->invoices->create([
 header('Location: '.$checkout['checkoutUrl']);
 ```
 
+Pass `'iframe' => true` to enable embedded (iframe) checkout instead of a full-page redirect:
+
+```php
+$checkout = $paylink->invoices->create([
+    'firstName'   => 'John',
+    'lastName'    => 'Doe',
+    'email'       => 'john@example.com',
+    'orderTitle'  => 'Gold Plan',
+    'orderAmount' => '250.00',
+    'currency'    => 'USD',
+    'iframe'      => true,       // embed the returned checkout URL in an <iframe>
+]);
+```
+
 Request parameters are passed as `camelCase` arrays; results come back as `camelCase` arrays.
 
 > Using Laravel? Don't construct the client by hand — **inject** the configured `PaylinkClient` from the container instead. See [Using it inside Laravel](#using-it-inside-laravel).

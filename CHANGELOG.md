@@ -4,6 +4,14 @@ All notable changes to this package are documented here. The format is based on
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres
 to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.2.0] - 2026-08-06
+
+### Added
+
+- Optional `iframe` param on `invoices->create` — pass `'iframe' => true` to enable
+  embedded (iframe) checkout. Like `payment_mode`, it is sent in the request body but
+  excluded from the HMAC signature.
+
 ## [0.1.0] - 2026-08-04
 
 ### Added
@@ -18,4 +26,5 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - PSR-3 logging with secret masking, and optional auto-discovered Laravel
   integration (service provider, `Paylink` facade, publishable config).
 
+[0.2.0]: https://github.com/GetPayin-Tech/paylink-php/releases/tag/v0.2.0
 [0.1.0]: https://github.com/GetPayin-Tech/paylink-php/releases/tag/v0.1.0

@@ -31,6 +31,19 @@ it('sends payment_mode in the body but excludes it from the signature', function
         ->and($withMode['signature'])->toBe($withoutMode['signature']);
 });
 
+it('sends iframe in the body but excludes it from the signature', function (): void {
+    $base = [
+        'firstName' => 'A', 'lastName' => 'B', 'email' => 'a@b.co',
+        'orderTitle' => 'X', 'orderAmount' => '5', 'currency' => 'USD',
+    ];
+
+    $withIframe = SignRequest::build(FieldOrders::invoiceCreate(), $base + ['iframe' => true], 'pub', 'secret');
+    $withoutIframe = SignRequest::build(FieldOrders::invoiceCreate(), $base, 'pub', 'secret');
+
+    expect($withIframe['iframe'])->toBe('1')
+        ->and($withIframe['signature'])->toBe($withoutIframe['signature']);
+});
+
 it('appends the US state block after the listed fields', function (): void {
     $body = SignRequest::build(FieldOrders::vccCharge(), [
         'firstName' => 'Sam', 'lastName' => 'Smith', 'currencyId' => 1, 'price' => 100,
