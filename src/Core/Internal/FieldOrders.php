@@ -39,6 +39,7 @@ final class FieldOrders
             new FieldSpec('webhookUrl', 'webhook_url'),
             new FieldSpec('orderDetails', 'order_details'),
             new FieldSpec('paymentMode', 'payment_mode', signed: false),
+            new FieldSpec('iframe', 'iframe', signed: false),
         ]);
     }
 
