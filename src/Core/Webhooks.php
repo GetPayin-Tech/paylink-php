@@ -23,13 +23,37 @@ final class Webhooks
     private const ALWAYS_SIGNED = ['success', 'invoice_id', 'invoice_status', 'message'];
 
     /**
-     * Optionally-signed fields, appended in this order only when the payload
-     * carries the key. This mirrors the server's opt-OUT signing: a field is
-     * signed when present, so `auth_code` (added after the signature is computed
+     * The fields a recurring mandate adds, in the order the server adds them.
+     *
+     * This mirrors the server's opt-OUT signing: a field is signed when the block
+     * that writes it runs, so `auth_code` (added after the signature is computed
      * server-side) is deliberately absent here. Getting membership backwards
      * breaks verification for every webhook carrying the field.
      */
-    private const OPTIONAL_SIGNED = ['mandate_id', 'external_reference', 'subscription_status'];
+    private const MANDATE_SIGNED = ['mandate_id', 'external_reference', 'subscription_status'];
+
+    /**
+     * The fields a card-token event adds, in the order the server adds them.
+     *
+     * `card_token.created` and `card_token.failed` are the only events that carry
+     * a tokenisation, and both are on by default for every integration. The
+     * server writes `tokenization_id` and `external_reference` first, then the
+     * card's details — and only when the card was actually vaulted, so a failed
+     * tokenisation signs the first two alone.
+     *
+     * Order matters because the signature is a separator-less concatenation: on
+     * an event with no mandate, `external_reference` is signed AFTER
+     * `tokenization_id`, not at the position it holds on a subscription event.
+     */
+    private const TOKENIZATION_SIGNED = [
+        'tokenization_id',
+        'external_reference',
+        'card_token',
+        'card_brand',
+        'card_last4',
+        'card_exp_month',
+        'card_exp_year',
+    ];
 
     public function __construct(private readonly Config $config) {}
 
@@ -91,24 +115,37 @@ final class Webhooks
     }
 
     /**
-     * Rebuild the expected signature from the payload's always- and (present)
-     * optional-signed fields.
+     * Rebuild the expected signature the way the server assembles it.
+     *
+     * `PaymentIntegrationWebhookJob` appends a whole block at a time — the
+     * mandate fields when the invoice belongs to one, the tokenisation fields
+     * when the event is about a card — and PHP keeps a key at the position it
+     * was first written. A block is therefore gated on its own leading field
+     * rather than on the individual fields inside it: `external_reference`
+     * belongs to whichever block introduced it, and is never signed twice.
      *
      * @param  array<string, mixed>  $payload
      */
     private function computeSignature(array $payload, string $hashToken): string
     {
-        $values = [];
+        $keys = self::ALWAYS_SIGNED;
 
-        foreach (self::ALWAYS_SIGNED as $key) {
-            $values[] = Coerce::toString($payload[$key] ?? null);
-        }
+        foreach ([self::MANDATE_SIGNED, self::TOKENIZATION_SIGNED] as $block) {
+            if (! array_key_exists($block[0], $payload)) {
+                continue;
+            }
 
-        foreach (self::OPTIONAL_SIGNED as $key) {
-            if (array_key_exists($key, $payload)) {
-                $values[] = Coerce::toString($payload[$key]);
+            foreach ($block as $key) {
+                if (array_key_exists($key, $payload) && ! in_array($key, $keys, true)) {
+                    $keys[] = $key;
+                }
             }
         }
+
+        $values = array_map(
+            static fn (string $key): string => Coerce::toString($payload[$key] ?? null),
+            $keys,
+        );
 
         return Signature::build($values, $hashToken);
     }
@@ -160,6 +197,12 @@ final class Webhooks
             externalReference: isset($payload['external_reference']) ? (string) $payload['external_reference'] : null,
             subscriptionStatus: isset($payload['subscription_status']) ? (string) $payload['subscription_status'] : null,
             raw: $payload,
+            tokenizationId: isset($payload['tokenization_id']) ? (string) $payload['tokenization_id'] : null,
+            cardToken: isset($payload['card_token']) ? (string) $payload['card_token'] : null,
+            cardBrand: isset($payload['card_brand']) ? (string) $payload['card_brand'] : null,
+            cardLast4: isset($payload['card_last4']) ? (string) $payload['card_last4'] : null,
+            cardExpMonth: isset($payload['card_exp_month']) ? (string) $payload['card_exp_month'] : null,
+            cardExpYear: isset($payload['card_exp_year']) ? (string) $payload['card_exp_year'] : null,
         );
     }
 }

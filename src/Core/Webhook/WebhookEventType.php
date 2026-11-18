@@ -31,4 +31,6 @@ enum WebhookEventType: string
     case VccPaymentFailed = 'vcc.payment_failed';
     case CardTokenChargeSucceeded = 'card_token.charge_succeeded';
     case CardTokenChargeFailed = 'card_token.charge_failed';
+    case CardTokenCreated = 'card_token.created';
+    case CardTokenFailed = 'card_token.failed';
 }

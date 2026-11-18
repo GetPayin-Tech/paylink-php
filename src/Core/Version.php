@@ -10,5 +10,5 @@ namespace GetPayin\Paylink\Core;
  */
 final class Version
 {
-    public const VALUE = '0.2.0';
+    public const VALUE = '0.3.0';
 }

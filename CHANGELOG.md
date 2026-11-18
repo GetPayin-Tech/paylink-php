@@ -4,6 +4,22 @@ All notable changes to this package are documented here. The format is based on
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres
 to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.0] - 2026-11-18
+
+### Fixed
+
+- `webhooks->verify()` now accepts `card_token.created` and `card_token.failed`. Both carry the
+  tokenisation and the card it produced, and the server signs all of those fields; this SDK signed
+  none of them, so every card-token webhook failed verification. Both events are on by default for
+  every integration, so any integrator saving cards was receiving webhooks it could not verify.
+
+### Added
+
+- `CardTokenCreated` and `CardTokenFailed` on `WebhookEventType`.
+- The saved card on `WebhookEvent`: `tokenizationId`, `cardToken`, `cardBrand`, `cardLast4`,
+  `cardExpMonth` and `cardExpYear`. They are appended after `raw`, so positional construction of an
+  event written before they existed still works.
+
 ## [0.2.0] - 2026-08-06
 
 ### Added
